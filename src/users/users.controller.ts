@@ -19,12 +19,14 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Request() { user }) {
+  async findOne(@Param('id') id: string, @Request() { user }) {
     const { _id, roles } = user._doc;
     if (id === _id || roles.includes(Role.Admin)) {
-      return this.usersService.findById(id);
+      const userData = await this.usersService.findById(id);
+      if (!userData) throw new NotFoundException({message: "User not found"});
+      return userData;
     } else {
-      throw new ForbiddenException({ message: 'User not found' });
+      throw new ForbiddenException();
     }
   }
 

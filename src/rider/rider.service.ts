@@ -15,6 +15,10 @@ export class RiderService {
     return this.riderModel.findById(id);
   }
 
+  async findMyRiders(accountId: string) {
+    return this.riderModel.find({accountId}).select('name createdAt updatedAt isPublic favorite');
+  }
+
   async createRider(name: string, items: any, accountId: string) {
     const newRider = new this.riderModel({
       name,
@@ -24,8 +28,8 @@ export class RiderService {
     return await newRider.save();
   }
 
-  async deleteRider(id: string) {
-    return this.riderModel.findByIdAndDelete(id);
+  async deleteRider(id: string, accountId: string) {
+    return this.riderModel.findOneAndRemove({id, accountId});
   }
 
 }

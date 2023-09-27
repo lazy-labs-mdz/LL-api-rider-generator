@@ -6,8 +6,5 @@ export const hashPassword = async (password) => {
 }
 
 export const validatePassword = async (password, hashedPassword) => {
-  console.log('hashedPassword', hashedPassword)
-  console.log('password', password)
-  console.log('bcrypt.compare(password, hashedPassword)', await bcrypt.compare(password, hashedPassword))
   return await bcrypt.compare(password, hashedPassword);
 }

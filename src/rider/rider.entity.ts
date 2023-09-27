@@ -4,4 +4,5 @@ export class Rider {
   items: any;
   favorite: boolean;
   accountId: string;
+  isPublic: boolean;
 }
