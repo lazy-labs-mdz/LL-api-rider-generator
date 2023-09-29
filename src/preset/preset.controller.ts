@@ -55,7 +55,6 @@ export class PresetController {
       try {
         return await this.presetService.update(id, updatePreset);
       } catch (error) {
-        console.log('error', error)
         throw error;
       }
     } else {

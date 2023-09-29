@@ -17,6 +17,9 @@ export class Rider {
 
   @Prop({default: false})
   isPublic: boolean
+
+  @Prop({type: 'object'})
+  extraFields: object
 }
 
 export const RiderSchema = SchemaFactory.createForClass(Rider);

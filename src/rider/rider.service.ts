@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { Rider } from "src/schemas/rider.schema";
+import { UpdateRiderDto } from "./dto/update-rider-dto";
 
 @Injectable()
 export class RiderService {
@@ -28,8 +29,12 @@ export class RiderService {
     return await newRider.save();
   }
 
-  async deleteRider(id: string, accountId: string) {
-    return this.riderModel.findOneAndRemove({id, accountId});
+  async updateRider(id:string, updateFields: UpdateRiderDto) {
+    return await this.riderModel.findByIdAndUpdate(id, updateFields, { new: true });
+  }
+
+  async deleteRider(id: string) {
+    return this.riderModel.findByIdAndRemove(id);
   }
 
 }

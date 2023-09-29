@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, Post, Request } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, Patch, Post, Request } from '@nestjs/common';
 import { RiderService } from './rider.service';
 import { CreateRiderDto } from './dto/create-rider.dto';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
+import { UpdateRiderDto } from './dto/update-rider-dto';
 
 @Controller('rider')
 export class RiderController {
@@ -46,10 +47,26 @@ export class RiderController {
     }
   }
 
+  @Patch(':id')
+  async updateRider(@Param('id') id: string, @Body() updateFields: UpdateRiderDto, @Request() { user }) {
+    const { _id, roles } = user._doc;
+    const rider = await this.riderService.findOne(id);
+    if (!rider) throw new NotFoundException('Rider not found');
+    if (rider.accountId === _id || roles.includes(Role.Admin)) {
+      try {
+        return await this.riderService.updateRider(id, updateFields);
+      } catch (error) {
+        throw error;
+      }
+    } else {
+      throw new ForbiddenException({ message: "You do not have permissions to perform this action" });
+    }
+  }
+
   @Delete(':id')
   @HttpCode(204)
-  async deleteRider(@Param('id') id: string, @Request() { user }) {
-    const rider = this.riderService.deleteRider(id, user._doc._id);
-    if (!rider) new NotFoundException('Rider not found');
+  async deleteRider(@Param('id') id: string) {
+    const rider = await this.riderService.deleteRider(id);
+    if (!rider) throw new NotFoundException('Rider not found');
   }
 }
