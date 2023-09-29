@@ -27,10 +27,10 @@ export class RiderController {
     const rider = await this.riderService.findOne(id);
     const { _id: accountId, roles } = user._doc;
     if (!rider) throw new NotFoundException('Rider not found');
-    if (rider.accountId.toString() !== accountId && !roles.includes(Role.Admin)) {
-      if (!rider.isPublic) {
-        throw new ForbiddenException({ message: 'You do not have permission to access this riders.' })
-      }
+    if (rider.accountId.toString() !== accountId &&
+      !roles.includes(Role.Admin) &&
+      !rider.isPublic) {
+      throw new ForbiddenException({ message: 'You do not have permission to access this riders.' })
     }
 
     return rider;
@@ -48,7 +48,7 @@ export class RiderController {
 
   @Delete(':id')
   @HttpCode(204)
-  async deleteRider(@Param('id') id: string, @Request() {user}) {
+  async deleteRider(@Param('id') id: string, @Request() { user }) {
     const rider = this.riderService.deleteRider(id, user._doc._id);
     if (!rider) new NotFoundException('Rider not found');
   }

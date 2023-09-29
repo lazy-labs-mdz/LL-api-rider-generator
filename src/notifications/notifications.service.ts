@@ -10,13 +10,13 @@ const notification_center = {
   "rider-shared": () => { }
 }
 
-const mailGenerator = new Mailgen({
-  theme: 'default',
-  product: {
-    name: " Rider Generator",
-    link: 'https://rg.io/'
-  }
-});
+// const mailGenerator = new Mailgen({
+//   theme: 'default',
+//   product: {
+//     name: " Rider Generator by Lazy Labs",
+//     link: 'https://rg.io/'
+//   }
+// });
 
 @Injectable()
 export class NotificationsService {
@@ -36,16 +36,16 @@ export class NotificationsService {
         }
       });
 
-      const emailBody = mailGenerator.generate(template);
+      // const emailBody = mailGenerator.generate(template);
 
-      await transport.sendMail({
-        from: process.env.EMAIL_USER,
-        to: userData.email,
-        subject: `[RG] ${subject}`, 
-        text,
-        html: emailBody,
-        attachments
-      });
+      // await transport.sendMail({
+      //   from: process.env.EMAIL_USER,
+      //   to: userData.email,
+      //   subject: `[RG] ${subject}`, 
+      //   text,
+      //   html: emailBody,
+      //   attachments
+      // });
     }
 
   }

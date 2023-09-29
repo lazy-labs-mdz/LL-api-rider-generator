@@ -62,7 +62,7 @@ export class UsersController {
   async updateUser(@Param('id') id: string, @Body() updateFields: UpdateUserDto, @Request() { user }) {
     const { _id, roles } = user._doc;
     if (id === _id || roles.includes(Role.Admin)) {
-      const user = this.usersService.updateUser(id, updateFields);
+      const user = await this.usersService.updateUser(id, updateFields);
       if (!user) throw new NotFoundException('User not found');
       return user;
     } else {

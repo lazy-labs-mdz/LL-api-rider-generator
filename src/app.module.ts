@@ -3,12 +3,11 @@ import { RiderModule } from './rider/rider.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './roles/roles.guard';
 import { NotificationsModule } from './notifications/notifications.module';
+import { PresetModule } from './preset/preset.module';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost/riderdb'), RiderModule, AuthModule, UsersModule, NotificationsModule],
+  imports: [MongooseModule.forRoot('mongodb://localhost/riderdb'), RiderModule, AuthModule, UsersModule, NotificationsModule, PresetModule],
   controllers: [],
   providers: [],
 })
