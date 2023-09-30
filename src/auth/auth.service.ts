@@ -20,7 +20,6 @@ export class AuthService {
     if (!user) {
       if (credential === CredentialOptions.google) {
         try {
-          console.log('payload', payload)
           await this.registerAccount({
             credential: CredentialOptions.google,
             email: email,
