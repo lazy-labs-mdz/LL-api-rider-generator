@@ -1,6 +1,10 @@
-import { IsNotEmpty, IsString, MinLength, ValidateIf } from 'class-validator'
+import { IsNotEmpty, IsString, ValidateIf } from 'class-validator'
 import { CredentialOptions } from 'src/schemas/user.schema';
 
+export type Payload = {
+  name: string;
+  username: string;
+}
 export class SignInDto {
   @IsNotEmpty()
   @IsString()
@@ -8,7 +12,11 @@ export class SignInDto {
 
   @ValidateIf(o => o.credential === CredentialOptions.basic)
   @IsString()
-  password: string;
+  password?: string;
 
+  @IsString()
+  @IsNotEmpty()
   credential: CredentialOptions
+
+  payload?: Payload;
 }

@@ -1,4 +1,4 @@
-import { IsArray, IsEmail, IsString, MaxLength, MinLength, ValidateIf, isNotEmpty } from "class-validator";
+import { IsArray, IsEmail, IsString, MaxLength, MinLength, ValidateIf } from "class-validator";
 import { Role } from "src/roles/role.enum";
 import { CredentialOptions } from "src/schemas/user.schema";
 
@@ -6,10 +6,10 @@ import { CredentialOptions } from "src/schemas/user.schema";
 export class CreateUserDto {
   @IsString()
   @MaxLength(15)
-  name: string;
+  name?: string;
 
   @MaxLength(10)
-  username: string;
+  username?: string;
 
   @IsEmail()
   email: string;
@@ -17,7 +17,7 @@ export class CreateUserDto {
   @ValidateIf(o => o.credential === CredentialOptions.basic)
   @IsString()
   @MinLength(6)
-  password: string;
+  password?: string;
 
   credential: CredentialOptions;
   
