@@ -1,5 +1,5 @@
 import { Body, ConflictException, Controller, Get, Post, NotFoundException, Delete, Param, HttpCode, Request, ForbiddenException, Patch, Put } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CredentialOptions } from 'src/schemas/user.schema';
 import { hashPassword } from 'src/utils/encryption';
@@ -8,21 +8,21 @@ import { Role } from 'src/roles/role.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 
-@Controller('users')
-export class UsersController {
-  constructor(private usersService: UsersService) { }
+@Controller('user')
+export class UserController {
+  constructor(private userService: UserService) { }
 
   @Get()
   @Roles(Role.Admin)
   getAll() {
-    return this.usersService.getAll();
+    return this.userService.getAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string, @Request() { user }) {
     const { _id, roles } = user._doc;
     if (id === _id || roles.includes(Role.Admin)) {
-      const userData = await this.usersService.findById(id);
+      const userData = await this.userService.findById(id);
       if (!userData) throw new NotFoundException({message: "User not found"});
       return userData;
     } else {
@@ -33,7 +33,7 @@ export class UsersController {
   @Post()
   @Roles(Role.Admin)
   async createUser(@Body() newUser: CreateUserDto) {
-    const userExist = await this.usersService.findUserByEmail(newUser.email);
+    const userExist = await this.userService.findUserByEmail(newUser.email);
     if (userExist) {
       throw new ConflictException('User already exists');
     }
@@ -52,7 +52,7 @@ export class UsersController {
     }
 
     try {
-      return await this.usersService.createUser(userBody);
+      return await this.userService.createUser(userBody);
     } catch (error) {
       throw error;
     }
@@ -62,7 +62,7 @@ export class UsersController {
   async updateUser(@Param('id') id: string, @Body() updateFields: UpdateUserDto, @Request() { user }) {
     const { _id, roles } = user._doc;
     if (id === _id || roles.includes(Role.Admin)) {
-      const user = await this.usersService.updateUser(id, updateFields);
+      const user = await this.userService.updateUser(id, updateFields);
       if (!user) throw new NotFoundException('User not found');
       return user;
     } else {
@@ -74,7 +74,7 @@ export class UsersController {
   @Roles(Role.Admin)
   async updateRol(@Param('id') id: string, @Body() data:UpdateRoleDto, @Request() { user }) {
     try {
-      return this.usersService.updateUser(id, data);
+      return this.userService.updateUser(id, data);
     } catch (error) {
       throw error;
     }
@@ -84,8 +84,14 @@ export class UsersController {
   @HttpCode(204)
   @Roles(Role.Admin)
   async deleteUser(@Param('id') id: string) {
-    const user = await this.usersService.deleteUser(id);
+    const user = await this.userService.deleteUser(id);
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
+
+  // @Put('upgrade/:id')
+  // async upgradeUser(@Body() body:, @Param('id') id:string, @Request() {user}) {
+  //   const {roles} = user._doc;
+    
+  // }
 }

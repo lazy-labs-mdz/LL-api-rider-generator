@@ -1,9 +1,9 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CredentialOptions } from 'src/schemas/user.schema';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/user/user.service';
 import { validatePassword } from 'src/utils/encryption';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Role } from 'src/roles/role.enum';
 import { Payload } from './dto/signIn.dto';
 
@@ -11,7 +11,7 @@ import { Payload } from './dto/signIn.dto';
 export class AuthService {
 
   constructor(
-    private usersService: UsersService,
+    private usersService: UserService,
     private jwtService: JwtService
   ) { }
 

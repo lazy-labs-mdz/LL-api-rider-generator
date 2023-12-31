@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UsersModule } from 'src/users/users.module';
-import { UsersService } from 'src/users/users.service';
+import { UserModule } from 'src/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { APP_GUARD } from '@nestjs/core';
@@ -11,7 +10,7 @@ import { RolesGuard } from 'src/roles/roles.guard';
 
 @Module({
   imports: [
-    UsersModule,
+    UserModule,
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
