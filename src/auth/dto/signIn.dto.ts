@@ -8,7 +8,7 @@ export type Payload = {
 }
 export class SignInDto {
   @ApiProperty({
-    example: 'esteban_10',
+    example: 'esteban@gmail.com',
     required: true
   })
   @IsNotEmpty()

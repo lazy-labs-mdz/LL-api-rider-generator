@@ -3,15 +3,15 @@ import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signIn.dto';
 import { AuthGuard } from './auth.guard';
 import { Public } from './public.decorator';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Role } from 'src/roles/role.enum';
 import { hashPassword } from 'src/utils/encryption';
 import { CredentialOptions } from 'src/schemas/user.schema';
 import { RegisterDto } from './dto/register-dto';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
 @ApiTags('Auth')
+@ApiBearerAuth('XYZ')
 export class AuthController {
   constructor(private authService: AuthService) { }
 

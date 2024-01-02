@@ -4,11 +4,11 @@ import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { CreatePresetDto } from './dto/create-preset.dto';
 import { UpdatePresetDto } from './dto/update-preset.dto';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Preset } from './preset.entity';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('preset')
 @ApiTags('Presets')
+@ApiBearerAuth('XYZ')
 export class PresetController {
   constructor(private presetService: PresetService) { }
 

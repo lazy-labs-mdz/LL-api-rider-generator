@@ -7,15 +7,19 @@ import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
 @ApiTags('User')
+@ApiBearerAuth('XYZ')
 export class UserController {
   constructor(private userService: UserService) { }
 
   @Get()
   @Roles(Role.Admin)
+  @ApiBody({
+    description: "Traer todos los usuarios"
+  })
   getAll() {
     return this.userService.getAll();
   }

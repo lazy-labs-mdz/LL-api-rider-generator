@@ -4,10 +4,11 @@ import { CreateRiderDto } from './dto/create-rider.dto';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { UpdateRiderDto } from './dto/update-rider-dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('rider')
 @ApiTags('Rider')
+@ApiBearerAuth('XYZ')
 export class RiderController {
   constructor(
     private riderService: RiderService,
