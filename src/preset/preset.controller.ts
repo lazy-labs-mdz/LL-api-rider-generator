@@ -4,16 +4,21 @@ import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { CreatePresetDto } from './dto/create-preset.dto';
 import { UpdatePresetDto } from './dto/update-preset.dto';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Preset } from './preset.entity';
 
 @Controller('preset')
+@ApiTags('Presets')
 export class PresetController {
   constructor(private presetService: PresetService) { }
 
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Get()
   @Roles(Role.Admin)
   getAllPresets() {
     return this.presetService.getAllPresets();
   }
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Get('myPresets')
   @Roles(Role.Admin, Role.UserPremium)
   getMyPreset(@Request() { user }) {
@@ -21,6 +26,7 @@ export class PresetController {
     return this.presetService.getMyPreset(_id);
   }
 
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Get(':id')
   @Roles(Role.Admin, Role.UserPremium)
   async getById(@Param('id') id: string, @Request() { user }) {
@@ -34,6 +40,11 @@ export class PresetController {
     }
   }
 
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiBody({
+    type: CreatePresetDto,
+    description: "Crear Preset"
+  })
   @Post()
   @Roles(Role.Admin, Role.UserPremium)
   async create(@Body() newPreset: CreatePresetDto, @Request() { user }) {
@@ -45,6 +56,11 @@ export class PresetController {
     }
   }
 
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiBody({
+    type: UpdatePresetDto,
+    description: "Actualizar Preset"
+  })
   @Patch(':id')
   @Roles(Role.Admin, Role.UserPremium)
   async update(@Param('id') id: string, @Body() updatePreset: UpdatePresetDto, @Request() { user }) {
@@ -62,6 +78,10 @@ export class PresetController {
     }
   }
 
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiBody({
+    description: "Eliminar Preset"
+  })
   @Delete(':id')
   @HttpCode(204)
   @Roles(Role.Admin, Role.UserPremium)

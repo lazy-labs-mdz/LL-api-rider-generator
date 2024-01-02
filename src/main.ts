@@ -11,7 +11,6 @@ async function bootstrap() {
     .setTitle('RG API Documentation')
     .setDescription('Documentacion de la API de RG')
     .setVersion('1.0')
-    .addTag('rider generator')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);

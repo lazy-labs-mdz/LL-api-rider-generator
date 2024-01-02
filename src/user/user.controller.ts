@@ -7,8 +7,10 @@ import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
+@ApiTags('User')
 export class UserController {
   constructor(private userService: UserService) { }
 
@@ -30,6 +32,10 @@ export class UserController {
     }
   }
 
+  @ApiBody({
+    type: CreateUserDto,
+    description: "Crear usuario",
+  })
   @Post()
   @Roles(Role.Admin)
   async createUser(@Body() newUser: CreateUserDto) {
@@ -58,6 +64,10 @@ export class UserController {
     }
   }
 
+  @ApiBody({
+    type: UpdateUserDto,
+    description: "Actualizar usuario",
+  })
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() updateFields: UpdateUserDto, @Request() { user }) {
     const { _id, roles } = user._doc;
@@ -70,6 +80,10 @@ export class UserController {
     }
   }
 
+  @ApiBody({
+    type: UpdateRoleDto,
+    description: "Actualizar Rol",
+  })
   @Patch(':id')
   @Roles(Role.Admin)
   async updateRol(@Param('id') id: string, @Body() data:UpdateRoleDto, @Request() { user }) {
