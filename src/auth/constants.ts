@@ -1,3 +1,11 @@
 export const jwtConstants = {
-  secret: 'H[?0A{gHpwU]@gg?Utz[hypD8-hVoB+r+N&E}%9t4~wKz/[Z=zB5lp(*<^S}(0D',
+  secret: `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyducUrf+SVZCEy7XLcVY
+B9oupG5cQmpuIZJ9fMWubVw40NdVxz3r6P9pkHAVsPBBHklOW2AKaFFg2LiAOLPK
+ywrKGMflJ3xU+mlVuFyNf1cfWx5VdL4cbBH/TYZ38XmuXIgVebqE+f8LTMuOS9po
+ybWmX7Q5wUf2WIQgCbz+VEBujM02KMggC7z1iSDQ16+bSJB4IbzmWo3EIhkOYhNu
+XwWkKj172zcYKm/6AFqDA+rkJ7bRbZmwk+zwG+b2zyn7cCC0khiTIOJL91uKhK6E
+x/f3qvmyYk1HTATwQ8pjKKJuM66zmHlM4QOUJyDc116jVowdI1X/VOQYEAeUH9IL
+QwIDAQAB
+-----END PUBLIC KEY-----`,
 };

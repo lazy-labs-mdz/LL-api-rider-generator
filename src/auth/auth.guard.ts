@@ -1,47 +1,32 @@
 import {
   CanActivate,
   ExecutionContext,
-  Injectable,
-  SetMetadata,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
 import { Request } from 'express';
-import { IS_PUBLIC_KEY } from './public.decorator';
-import { Reflector } from '@nestjs/core';
+import clerkClient from '@clerk/clerk-sdk-node';
+import clerk from '@clerk/clerk-sdk-node';
 
-@Injectable()
-export class AuthGuard implements CanActivate {
-  constructor(
-    private jwtService: JwtService,
-    private reflector: Reflector
-  ) { }
+export class JwtAuthGuard implements CanActivate {
+
+  constructor() { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
-    if (isPublic) {
-      return true;
-    }
-    
     const request = context.switchToHttp().getRequest();
+    const response = context.switchToHttp().getResponse();
     const token = this.extractTokenFromHeader(request);
-    if (!token) {
-      throw new UnauthorizedException();
-    }
-    try {
-      const payload = await this.jwtService.verifyAsync(
-        token,
-        {
-          secret: jwtConstants.secret
-        }
-      );
-      request['user'] = payload;
-    } catch {
+
+    try {         
+      const client = await clerk.clients.verifyClient(token);
+      const session = await clerkClient.sessions.getSession(client.lastActiveSessionId);
+      
+      let user:any = request.cookies?.[`__session__${session.userId}`]
+      if (!user) {
+        user = await clerkClient.users.getUser(session.userId);
+        response.cookie(`__session__${session.userId}`, user);
+      }
+      request['user'] = user;
+    } catch (error) {
       throw new UnauthorizedException();
     }
     return true;
