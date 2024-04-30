@@ -11,7 +11,6 @@ import { BandModule } from './band/band.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/riderdb'),
     RiderModule,
     AuthModule,
     NotificationsModule,
@@ -23,7 +22,8 @@ import { BandModule } from './band/band.module';
     CacheModule.register({
       isGlobal: true,
     }),
-    BandModule
+    BandModule,
+    MongooseModule.forRoot(process.env.MONGO_URI)
   ],
   controllers: [],
   providers: [],
