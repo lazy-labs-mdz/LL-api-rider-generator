@@ -9,7 +9,7 @@ export class Rider {
   @Prop({default: false})
   favorite: boolean
 
-  @Prop({required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Users'})
+  @Prop({required: true})
   accountId: string
 
   @Prop({required: true, type: 'object'})

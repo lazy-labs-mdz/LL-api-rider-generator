@@ -6,6 +6,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { PresetModule } from './preset/preset.module';
 import { ConfigModule } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
+import { BandModule } from './band/band.module';
 
 
 @Module({
@@ -21,7 +22,8 @@ import { CacheModule } from '@nestjs/cache-manager';
     }),
     CacheModule.register({
       isGlobal: true,
-    })
+    }),
+    BandModule
   ],
   controllers: [],
   providers: [],

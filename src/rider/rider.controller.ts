@@ -14,16 +14,15 @@ export class RiderController {
     private riderService: RiderService,
   ) { }
 
-  @Get()
+  @Get('all')
   @Roles(Role.Admin)
   getAll() {
     return this.riderService.getAll();
   }
 
-  @Get('myRiders')
+  @Get('my-riders')
   findMyRiders(@Request() { user }) {
-    const { _id: accountId } = user._doc;
-    return this.riderService.findMyRiders(accountId);
+    return this.riderService.findMyRiders(user.id);
   }
 
   @Get(':id')
@@ -42,7 +41,7 @@ export class RiderController {
 
   @Post()
   async createRider(@Body() newRider: CreateRiderDto, @Request() req) {
-    const accountId = req.user._doc._id;
+    const accountId = req.user.id;
     try {
       return await this.riderService.createRider(newRider.name, newRider.items, accountId);
     } catch (error) {
