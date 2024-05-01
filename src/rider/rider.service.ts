@@ -6,10 +6,10 @@ import { UpdateRiderDto } from "./dto/update-rider-dto";
 
 @Injectable()
 export class RiderService {
-  constructor(@InjectModel(Rider.name) private riderModel: Model<Rider>) {}
+  constructor(@InjectModel(Rider.name) private riderModel: Model<Rider>) { }
 
-  getAll() {
-    return this.riderModel.find();
+  getAll(limit:number, page:number) {
+    return this.riderModel.find().limit(limit).skip((page - 1) * limit).exec();;
   }
 
   async findOne(id: string) {
@@ -17,7 +17,7 @@ export class RiderService {
   }
 
   async findMyRiders(accountId: string) {
-    return this.riderModel.find({accountId}).select('name createdAt updatedAt isPublic favorite');
+    return this.riderModel.find({ accountId }).select('name createdAt updatedAt isPublic favorite');
   }
 
   async createRider(name: string, items: any, accountId: string) {
@@ -29,7 +29,10 @@ export class RiderService {
     return await newRider.save();
   }
 
-  async updateRider(id:string, updateFields: UpdateRiderDto) {
+  async updateRiderOneField(id: string, field: any) {
+    return this.riderModel.findOneAndUpdate({ _id: id }, { ...field }, { new: true })
+  }
+  async updateRider(id: string, updateFields: UpdateRiderDto) {
     return await this.riderModel.findByIdAndUpdate(id, updateFields, { new: true });
   }
 

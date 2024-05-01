@@ -71,6 +71,9 @@ dependencies:
   mongoose:
     specifier: ^7.5.2
     version: 7.5.2
+  mongoose-paginate:
+    specifier: ^5.0.3
+    version: 5.0.3
   nodemailer:
     specifier: ^6.9.5
     version: 6.9.5
@@ -2130,6 +2133,10 @@ packages:
       inherits: 2.0.4
       readable-stream: 3.6.2
     dev: true
+
+  /bluebird@3.0.5:
+    resolution: {integrity: sha512-5o9RE3ued60EEv6gcT5L2APn/4zSpAwzeH65fuF+d/K3/LGZ9JpGIlDU2HeI4NujAY5Wh7mUBM5UF3Zuh8bBhQ==}
+    dev: false
 
   /body-parser@1.20.1:
     resolution: {integrity: sha512-jWi7abTbYwajOytWCQc37VulmWiRae5RyTpaCyDcS5/lMdtwSz5lOpDE67srw/HYe35f1z3fDQw+3txg7gNtWw==}
@@ -4825,6 +4832,13 @@ packages:
       socks: 2.7.1
     optionalDependencies:
       '@mongodb-js/saslprep': 1.1.0
+    dev: false
+
+  /mongoose-paginate@5.0.3:
+    resolution: {integrity: sha512-sqrQJJ2nY7z2S5XzrMxbnlnAXpOnqyyM8t/FQ4Rv0uimYyacitmVSZOjlotbiQLI8I4v4hy3dCtJn31+OPl5Wg==}
+    engines: {node: '>=4.0.0'}
+    dependencies:
+      bluebird: 3.0.5
     dev: false
 
   /mongoose@7.5.2:

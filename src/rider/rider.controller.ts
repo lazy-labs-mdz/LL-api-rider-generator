@@ -1,10 +1,13 @@
-import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, Patch, Post, Request } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, Patch, Post, Query, Request } from '@nestjs/common';
 import { RiderService } from './rider.service';
 import { CreateRiderDto } from './dto/create-rider.dto';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { UpdateRiderDto } from './dto/update-rider-dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UpdateRiderNameDto } from './dto/update-rider-name.dto';
+import { UpdateRiderPublicDto } from './dto/update-rider-public.dto';
+import { UpdateRiderFavoriteDto } from './dto/update-rider-favorite.dto';
 
 @Controller('rider')
 @ApiTags('Rider')
@@ -14,10 +17,10 @@ export class RiderController {
     private riderService: RiderService,
   ) { }
 
-  @Get('all')
+  @Get('private/all')
   @Roles(Role.Admin)
-  getAll() {
-    return this.riderService.getAll();
+  getAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
+    return this.riderService.getAll(limit, page);
   }
 
   @Get('my-riders')
@@ -28,14 +31,10 @@ export class RiderController {
   @Get(':id')
   async findOne(@Param("id") id: string, @Request() { user }) {
     const rider = await this.riderService.findOne(id);
-    const { _id: accountId, roles } = user._doc;
-    if (!rider) throw new NotFoundException('Rider not found');
-    if (rider.accountId.toString() !== accountId &&
-      !roles.includes(Role.Admin) &&
-      !rider.isPublic) {
-      throw new ForbiddenException({ message: 'You do not have permission to access this riders.' })
+    const accountId = user.id;
+    if (rider.accountId.toString() !== accountId || !rider.isPublic) {
+      throw new NotFoundException('Rider not found');
     }
-
     return rider;
   }
 
@@ -49,26 +48,63 @@ export class RiderController {
     }
   }
 
-  @Patch(':id')
-  async updateRider(@Param('id') id: string, @Body() updateFields: UpdateRiderDto, @Request() { user }) {
-    const { _id, roles } = user._doc;
+  @Patch('update-name-rider/:id')
+  async updateRiderName(@Param('id') id: string, @Body() updateRiderName: UpdateRiderNameDto, @Request() { user }) {
+    const { id: accountId } = user;
     const rider = await this.riderService.findOne(id);
-    if (!rider) throw new NotFoundException('Rider not found');
-    if (rider.accountId === _id || roles.includes(Role.Admin)) {
+    if (rider?.accountId === accountId) {
+      return await this.riderService.updateRiderOneField(id, updateRiderName)
+    } else {
+      throw new NotFoundException('Rider not found');
+    }
+  }
+
+  @Patch('update-favorite-rider/:id')
+  async updateRiderFavorite(@Param('id') id: string, @Body() updateRiderfavorite: UpdateRiderFavoriteDto, @Request() { user }) {
+    const { id: accountId } = user;
+    const rider = await this.riderService.findOne(id);
+    if (rider?.accountId === accountId) {
+      return await this.riderService.updateRiderOneField(id, updateRiderfavorite)
+    } else {
+      throw new NotFoundException('Rider not found');
+    }
+  }
+
+  @Patch('update-public-rider/:id')
+  async updateRiderPublic(@Param('id') id: string, @Body() updateRiderPublic: UpdateRiderPublicDto, @Request() { user }) {
+    const { id: accountId } = user;
+    const rider = await this.riderService.findOne(id);
+    if (rider?.accountId === accountId) {
+      return await this.riderService.updateRiderOneField(id, updateRiderPublic)
+    } else {
+      throw new NotFoundException('Rider not found');
+    }
+  }
+
+  @Patch(':id')
+  async updateRider(@Param('id') id: string, @Body() updateFields: UpdateRiderDto, @Request() req) {
+    const accountId = req.user.id;
+    const rider = await this.riderService.findOne(id);
+
+    if (rider.accountId === accountId) {
       try {
         return await this.riderService.updateRider(id, updateFields);
       } catch (error) {
-        throw error;
+        throw new NotFoundException('Error search rider');
       }
     } else {
-      throw new ForbiddenException({ message: "You do not have permissions to perform this action" });
+      throw new NotFoundException('Rider not found');
     }
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async deleteRider(@Param('id') id: string) {
-    const rider = await this.riderService.deleteRider(id);
-    if (!rider) throw new NotFoundException('Rider not found');
+  async deleteRider(@Param('id') id: string, @Request() { user }) {
+    const findRider = await this.riderService.findOne(id);
+    if (findRider.accountId === user?.id) {
+      return this.riderService.deleteRider(id);
+    } else {
+      throw new NotFoundException('Rider not found');
+    }
   }
 }
